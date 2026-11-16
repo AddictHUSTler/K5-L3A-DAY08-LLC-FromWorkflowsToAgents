@@ -1,5 +1,0 @@
-# Hai bộ đánh giá
-
-Bộ học viên tự chạy nằm trong git: `data/public_claims.jsonl` và `tests/test_public_matrix.py` (marker `student`).
-
-Bộ giảng viên nằm ở `eval/instructor/` và được `.gitignore` chặn. Thư mục đó có trên máy soạn bài, không đi theo `git clone` của học viên. Cách phát cuối buổi và cách chấm ghi trong `eval/instructor/README_GIANG_VIEN.md` trên máy giảng viên.

@@ -20,17 +20,17 @@ def _preflight() -> None:
     if sys.version_info < MIN_PYTHON:
         raise SystemExit(
             f"Python {platform.python_version()} quá cũ. Cần Python {MIN_PYTHON[0]}.{MIN_PYTHON[1]}+ "
-            "(xem mục 'Cài và chạy' trong README)."
+            "(xem mục 'Cài đặt theo hệ điều hành' trong src/README.md)."
         )
     try:
         import yaml  # noqa: F401
     except ModuleNotFoundError:
         raise SystemExit(
-            "Thiếu PyYAML. Kích hoạt venv rồi chạy: python -m pip install -r requirements.txt"
+            "Thiếu PyYAML. Đứng trong thư mục src/, kích hoạt venv rồi chạy: python -m pip install -r requirements.txt"
         ) from None
     root = Path(__file__).resolve().parents[1]
     if not (root / "config" / "autonomy_policy.yaml").exists():
-        raise SystemExit(f"Không thấy config/ cạnh {root}. Repo bị thiếu file?")
+        raise SystemExit(f"Không thấy config/ trong {root}. Mọi lệnh chạy trong thư mục src/. Repo bị thiếu file?")
 
 
 def main() -> int:

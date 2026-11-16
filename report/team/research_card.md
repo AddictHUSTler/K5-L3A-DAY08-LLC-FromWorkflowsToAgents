@@ -12,13 +12,13 @@
 
 ## Kết quả ablation
 
-Lệnh đã chạy:
+Lệnh chạy trong `src/` sau khi activate môi trường:
 
 ```bash
-.venv/bin/python -m lab8.benchmark --shapes swarm,swarm_order_only --extra-shape swarm_order_only=lab8.research_ablation:run_claim --cases data/public_claims.jsonl --seeds 11,22,33,44,55 --out reports/ablation_ticket_delay.json
+python -m lab8.benchmark --shapes swarm,swarm_order_only --extra-shape swarm_order_only=lab8.research_ablation:run_claim --cases data/public_claims.jsonl --seeds 11,22,33,44,55 --out reports/ablation_ticket_delay.json
 ```
 
-Code: `lab8/research_ablation.py`. Patch chỉ có hiệu lực trong variant, giữ nguyên reference. Report: `reports/ablation_ticket_delay.json` (140 trial). Run đối chiếu: `R-swarm-C-002-s55` và `R-swarm_order_only-C-002-s55`.
+Code: `src/lab8/research_ablation.py`. Patch chỉ có hiệu lực trong variant, giữ nguyên reference. Report: `src/reports/ablation_ticket_delay.json` (140 trial). Run đối chiếu: `R-swarm-C-002-s55` và `R-swarm_order_only-C-002-s55`.
 
 | Metric | Swarm gốc | Tắt ticket delay |
 | --- | --- | --- |

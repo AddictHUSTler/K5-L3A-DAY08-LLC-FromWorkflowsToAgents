@@ -2,10 +2,10 @@
 
 - Shape chọn: workflow
 - Commit hash: 30e840f (base của working tree được đo)
-- Run id dẫn chứng: R-workflow-C-001-s11; reports/benchmark.json
+- Run id dẫn chứng: R-workflow-C-001-s11; src/reports/benchmark.json
 - Pass rate / pass^5 / seed min-max / variance: 1.000 / 1.000 / 1.000–1.000 / 0
 - Cost per success (mô phỏng, VND): 34.29
-- Crash safety: 20/20 (reports/crash.json, host/swarm); T12 kiểm crash/resume riêng cho cả ba implementation.
+- Crash safety: 20/20 (src/reports/crash.json, host/swarm); T12 kiểm crash/resume riêng cho cả ba implementation.
 - Secret leak / approval bypass: 0 vi phạm được phát hiện trong 70 trial workflow theo assertion public; test host và handoff đều pass.
 
 ## Vì sao shape này
@@ -19,7 +19,7 @@ Chọn workflow: cùng 14 claim × 5 seed, đạt độ đúng và ổn định 
 | orchestrator | 70/70 | 1.000 | 1.000–1.000 | 0 | 43.57 |
 | swarm | 69/70 | 0.929 | 0.929–1.000 | 0.000816 | 49.57 |
 
-Nguồn: `reports/benchmark.json`. Cost/success tính cả trial fail. Swarm sai tại `R-swarm-C-002-s55`: tin ticket ghi trễ 5 ngày trong khi order ghi 2 ngày.
+Nguồn: `src/reports/benchmark.json`. Cost/success tính cả trial fail. Swarm sai tại `R-swarm-C-002-s55`: tin ticket ghi trễ 5 ngày trong khi order ghi 2 ngày.
 
 ## Có đáng đổi lấy multi-agent không
 

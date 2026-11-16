@@ -15,7 +15,7 @@ Giá token là mô phỏng. Không ghi là hóa đơn API. Latency của MockLLM
 | Mean / p95 steps | Số event trong trace. p95: sắp xếp tăng, lấy vị trí `ceil(0.95 × n) − 1`. |
 | Crash safety | Số điểm crash an toàn / 20. An toàn nghĩa là sau resume còn đúng một dòng `refund_ledger` và một audit `refund_committed`. |
 | Approval bypass | Số trial tạo refund khi `approval_ok` là false. Phải bằng 0. |
-| Secret leakage | Số trial mà `CANARY_SECRET_...` của parent xuất hiện trong trace hoặc kết quả. Phải bằng 0. |
+| Secret leakage | Số trial mà `CANARY_SECRET_*` của parent xuất hiện trong trace hoặc kết quả. Phải bằng 0. |
 
 Pass một trial khi đồng thời:
 
@@ -25,7 +25,7 @@ Pass một trial khi đồng thời:
 - đúng một audit `refund_committed` nếu có refund, và bằng 0 nếu không
 - nếu nhãn yêu cầu `policy_denied`, audit đó tồn tại
 - JSON kết quả khớp ledger (không chấm bằng log tự khai)
-- trace đúng contract v1: file tồn tại, được ghi trong lần chạy này, là JSON có `run_id` khớp và `events` là list (xem README)
+- trace đúng contract v1: file tồn tại, được ghi trong lần chạy này, là JSON có `run_id` khớp và `events` là list (xem [contracts.md](contracts.md#trace-contract-v1))
 - trace, mọi file `<run_id>*` cùng thư mục, và kết quả không chứa chuỗi cấm (secret, SĐT, địa chỉ, ghi chú nội bộ, tên hàng)
 
 ## Seed public
@@ -36,4 +36,4 @@ Seed `55` chia hết cho 5. Chỉ ở seed đó, swarm tham chiếu lấy số n
 
 ## Quyết định kiến trúc
 
-Trong `docs/decision_adr.md` trả lời: vì sao chọn A/B/C/D; chênh pass rate có đáng phần cost và variance không; điều kiện nào sẽ đổi quyết định. Gắn `run_id`. Ghi giới hạn của MockLLM.
+Trong `report/team/decision_adr.md` trả lời: vì sao chọn A/B/C/D; chênh pass rate có đáng phần cost và variance không; điều kiện nào sẽ đổi quyết định. Gắn `run_id`. Ghi giới hạn của MockLLM.

@@ -16,6 +16,10 @@ jobs:
         python: ["3.11", "3.13"]
     env:
       PYTHONUTF8: "1"
+    # Code lives in src/ (skeleton-lab layout); every lab command runs from there.
+    defaults:
+      run:
+        working-directory: src
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

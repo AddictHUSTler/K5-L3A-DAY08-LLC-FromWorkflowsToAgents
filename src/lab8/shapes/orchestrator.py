@@ -11,7 +11,7 @@
 
 An LLM summary of the parent context is not a sanitizer. Use the allowlist.
 
-Trace contract v1 (README): return a trace_path to a JSON file written in this run,
+Trace contract v1 (../../docs/contracts.md): return a trace_path to a JSON file written in this run,
 {"run_id": <same run_id>, "events": [...]}, on every return path including early
 ones. `lab8.trace.Trace` does this; your own tracer is fine if it matches.
 """

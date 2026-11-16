@@ -4,6 +4,11 @@ This does not grade. It checks that the instructor's grader will be able to read
 what you hand in: shapes return a valid RunResult with a contract-v1 trace, the
 report files exist and were produced by the lab tools, and the docs have the
 machine-readable lines filled in. Fix every [FAIL] before submitting.
+
+Layout (skeleton-lab): code lives in `src/` and every command runs from `src/`.
+Generated evidence stays in `src/reports/`. Team-written files live at the repo
+root: `TEAM.md` (contribution table) and `report/team/*.md` (ADR, research card,
+optional bonus report).
 """
 
 from __future__ import annotations
@@ -41,7 +46,41 @@ class Report:
 
 
 def _root() -> Path:
+    """`src/`: code, data, config and generated `reports/`."""
     return Path(__file__).resolve().parents[1]
+
+
+def _repo_root() -> Path:
+    """Repo root: `TEAM.md` and `report/team/` (skeleton-lab layout)."""
+    return Path(__file__).resolve().parents[2]
+
+
+TEAM_REPORT_DIR = ("report", "team")
+ADR_FILE = "report/team/decision_adr.md"
+CARD_FILE = "report/team/research_card.md"
+BONUS_FILE = "report/team/bonus_report.md"
+CONTRIB_HEADING = "## Bảng đóng góp"
+
+
+def _read_text(rep: Report, path: Path, label: str) -> str | None:
+    try:
+        return path.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError):
+        rep.fail(f"thiếu {label}", "khôi phục file mẫu từ repo đề bài, không đổi tên hay dời chỗ")
+        return None
+
+
+def _contribution_rows(team_md: str) -> list[str]:
+    """Data rows of the table under `## Bảng đóng góp` in TEAM.md."""
+    rows: list[str] = []
+    inside = False
+    for line in team_md.splitlines():
+        if line.startswith("## "):
+            inside = line.strip() == CONTRIB_HEADING
+            continue
+        if inside and line.startswith("|") and "---" not in line:
+            rows.append(line)
+    return rows[1:]  # drop header row
 
 
 def check_shapes(rep: Report) -> None:
@@ -89,7 +128,7 @@ def check_shapes(rep: Report) -> None:
                 rep.fail(
                     f"shape {shape}: lỗi format trên claim public (seed 11): {detail}",
                     "run_claim phải trả lab8.schemas.RunResult (dùng lab8.shapes.common.finish), có trace "
-                    "đúng mục 'Trace contract v1' trong README, và không được ném exception",
+                    "đúng mục 'Trace contract v1' trong docs/contracts.md, và không được ném exception",
                 )
             elif passed < total:
                 detail = ", ".join(f"{k} x{v}" for k, v in problems.items())
@@ -142,33 +181,50 @@ def _field(text: str, label: str) -> str | None:
 
 
 def check_docs(rep: Report) -> None:
-    root = _root()
-    adr = (root / "docs" / "decision_adr.md").read_text(encoding="utf-8")
+    root = _repo_root()
+    adr = _read_text(rep, root.joinpath(*TEAM_REPORT_DIR, "decision_adr.md"), ADR_FILE)
+    if adr is not None:
+        _check_adr(rep, adr)
+    team = _read_text(rep, root / "TEAM.md", "TEAM.md")
+    if team is not None:
+        _check_contributions(rep, team)
+    card = _read_text(rep, root.joinpath(*TEAM_REPORT_DIR, "research_card.md"), CARD_FILE)
+    if card is not None:
+        _check_research_card(rep, card)
+    _check_bonus(rep, root.joinpath(*TEAM_REPORT_DIR, "bonus_report.md"))
+
+
+def _check_adr(rep: Report, adr: str) -> None:
     shape = _field(adr, "Shape chọn")
     if shape is None:
-        rep.fail("docs/decision_adr.md: không thấy dòng '- Shape chọn:'", "giữ nguyên dòng nhãn trong mẫu")
+        rep.fail(f"{ADR_FILE}: không thấy dòng '- Shape chọn:'", "giữ nguyên dòng nhãn trong mẫu")
     elif shape.strip("`").lower() not in ALL_SHAPES:
         rep.fail(
-            f"docs/decision_adr.md: Shape chọn = {shape!r}",
+            f"{ADR_FILE}: Shape chọn = {shape!r}",
             "ghi đúng một trong: workflow, single, orchestrator, swarm (ví dụ '- Shape chọn: workflow')",
         )
     else:
-        rep.ok(f"docs/decision_adr.md: Shape chọn = {shape.strip('`').lower()}")
+        rep.ok(f"{ADR_FILE}: Shape chọn = {shape.strip('`').lower()}")
     for label in ("Commit hash", "Run id dẫn chứng", "Pass rate / pass^5 / seed min-max / variance",
                   "Cost per success (mô phỏng, VND)", "Crash safety", "Secret leak / approval bypass"):
         value = _field(adr, label)
         if not value:
-            rep.fail(f"docs/decision_adr.md: '{label}' còn trống", f"điền '- {label}: ...' trên cùng dòng")
+            rep.fail(f"{ADR_FILE}: '{label}' còn trống", f"điền '- {label}: ...' trên cùng dòng")
 
-    contrib = (root / "docs" / "contributions.md").read_text(encoding="utf-8")
-    rows = [line for line in contrib.splitlines() if line.startswith("|") and "---" not in line][1:]
+
+def _check_contributions(rep: Report, team_md: str) -> None:
+    rows = _contribution_rows(team_md)
     filled = [row for row in rows if row.strip("| ").replace("|", "").strip()]
     if not filled:
-        rep.fail("docs/contributions.md: chưa có dòng thành viên nào", "mỗi người một dòng: tên, vai, commit, test")
+        rep.fail(
+            f"TEAM.md: bảng dưới '{CONTRIB_HEADING}' chưa có dòng thành viên nào",
+            "mỗi người một dòng: tên, vai, commit, test",
+        )
     else:
-        rep.ok(f"docs/contributions.md: {len(filled)} thành viên")
+        rep.ok(f"TEAM.md: bảng đóng góp có {len(filled)} thành viên")
 
-    card = (root / "docs" / "research_card.md").read_text(encoding="utf-8")
+
+def _check_research_card(rep: Report, card: str) -> None:
     empty = []
     for line in card.splitlines():
         cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
@@ -176,21 +232,22 @@ def check_docs(rep: Report) -> None:
             if not cells[2]:
                 empty.append(cells[0])
     if empty:
-        rep.fail(f"docs/research_card.md: còn trống {empty}", "điền cột 'Nhóm điền'")
+        rep.fail(f"{CARD_FILE}: còn trống {empty}", "điền cột 'Nhóm điền'")
     else:
-        rep.ok("docs/research_card.md: đã điền đủ")
+        rep.ok(f"{CARD_FILE}: đã điền đủ")
 
-    bonus = root / "docs" / "bonus_report.md"
+
+def _check_bonus(rep: Report, bonus: Path) -> None:
     if bonus.exists():
         text = bonus.read_text(encoding="utf-8")
         if not re.search(r"Bonus report:\s*B[1-6]\b", text):
-            rep.fail("docs/bonus_report.md: tiêu đề phải là '# Bonus report: B1' .. 'B6'", "dùng khung trong docs/bonus_topics.md")
+            rep.fail(f"{BONUS_FILE}: tiêu đề phải là '# Bonus report: B1' .. 'B6'", "dùng khung trong docs/bonus_topics.md")
         else:
-            rep.ok("docs/bonus_report.md: đã khai topic")
+            rep.ok(f"{BONUS_FILE}: đã khai topic")
 
 
 def check_git(rep: Report) -> None:
-    root = _root()
+    root = _repo_root()
     try:
         head = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=root, capture_output=True, text=True, check=True)
         dirty = subprocess.run(["git", "status", "--porcelain"], cwd=root, capture_output=True, text=True, check=True)
@@ -198,7 +255,7 @@ def check_git(rep: Report) -> None:
         rep.warn("không chạy được git, không đọc được commit hash")
         return
     if dirty.stdout.strip():
-        rep.warn("còn thay đổi chưa commit; commit xong rồi mới ghi hash vào docs/decision_adr.md")
+        rep.warn(f"còn thay đổi chưa commit; commit xong rồi mới ghi hash vào {ADR_FILE}")
     print(f"       commit hash: {head.stdout.strip()}")
 
 

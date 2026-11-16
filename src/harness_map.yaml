@@ -17,7 +17,7 @@ sections:
       - after_checkpoint
     evaluator: lab8.metrics
     public_cases: data/public_claims.jsonl
-    hidden_pack: eval/instructor
+    hidden_pack: eval/instructor  # chỉ có trên máy giảng viên; chấm bằng grader riêng ngoài repo này
     gates:
       pass_rate_min: 0.75
       crash_safe_min: 20

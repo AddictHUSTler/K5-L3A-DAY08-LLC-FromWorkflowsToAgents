@@ -1,18 +1,18 @@
 # Bonus report: B3
 
-- Topic + nguồn (tên, năm, slide): Google Research 2026, error amplification; slide 17, 22, 42, theo [hướng dẫn B3](bonus_topics.md#b3--verifieraggregator-chống-khuếch-đại-lỗi).
+- Topic + nguồn (tên, năm, slide): Google Research 2026, error amplification; slide 17, 22, 42, theo [hướng dẫn B3](../../docs/bonus_topics.md#b3--verifieraggregator-chống-khuếch-đại-lỗi).
 - CLAIM của nguồn (1 câu): Kiểm chứng tập trung có thể giảm khuếch đại lỗi giữa các agent.
 - BOUNDARY (model / dataset / setup): Kết quả nguồn thuộc các setup nghiên cứu; không dùng hệ số 17,2× / 4,4× làm dự đoán cho lab.
 - HYPOTHESIS trên LogiX: Kiểm tra facts trước khi ghi sẽ sửa lỗi ticket-delay, đạt correctness bằng workflow nhưng cost cao hơn.
 - Biến cố định / biến thay đổi: Cùng world, claim, 5 seed, MockLLM, tools, giá và evaluator; chỉ thêm verifier vào swarm. Giữ nguyên peer/parse/draft và lỗi tham chiếu. Mỗi trial dùng SQLite mới.
-- Lệnh tái lập (copy-paste được, sau khi activate môi trường):
+- Lệnh tái lập (copy-paste được, chạy trong `src/`, sau khi activate môi trường):
 
 ```bash
 python -m bonus.measure
 python -m pytest -q tests/test_bonus_verifier.py
 ```
 
-- File report + run id: [reports/bonus_verifier.json](../reports/bonus_verifier.json); `R-swarm_verified-C-002-s55`. Script đăng ký variant qua cùng cơ chế `--extra-shape`, dùng benchmark và evaluator có sẵn.
+- File report + run id: [src/reports/bonus_verifier.json](../../src/reports/bonus_verifier.json); `R-swarm_verified-C-002-s55`. Script đăng ký variant qua cùng cơ chế `--extra-shape`, dùng benchmark và evaluator có sẵn.
 
 ## Kết quả
 

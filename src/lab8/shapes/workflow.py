@@ -22,7 +22,7 @@ Suggested steps. Money stays in code (`lab8.tools.compute_compensation`).
 
 The model must not choose the refund amount and must not commit the refund.
 
-Trace contract v1 (README): return a trace_path to a JSON file written in this run,
+Trace contract v1 (../../docs/contracts.md): return a trace_path to a JSON file written in this run,
 {"run_id": <same run_id>, "events": [...]}, on every return path including early
 ones. `lab8.trace.Trace` does this; your own tracer is fine if it matches.
 """

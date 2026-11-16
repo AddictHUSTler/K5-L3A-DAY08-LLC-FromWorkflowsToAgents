@@ -51,7 +51,7 @@ def unexpected_ledger_rows(conn: sqlite3.Connection, claim_id: str) -> int:
     return total - prior - own
 
 
-# Trace contract v1 (README, "Trace contract v1"):
+# Trace contract v1 (docs/contracts.md, "Trace contract v1"):
 #   1. RunResult.trace_path points to a JSON file written during this run.
 #   2. The file is an object with "run_id" equal to RunResult.run_id and an "events" list.
 #   3. Every other file the shape writes goes in the same folder, named "<run_id>*".
