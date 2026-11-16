@@ -24,7 +24,7 @@ from lab8.db import connect
 from lab8.handoff import make_handoff
 from lab8.runtime import run_readonly_investigators
 from lab8.schemas import Budget, RunResult, make_run_id
-from lab8.shapes.common import finish, settle_quote
+from lab8.shapes.common import finish
 from lab8.tools import get_claim_view, tool_cost
 from lab8.trace import Trace
 
@@ -65,9 +65,34 @@ def run_claim(
         if not order_view["visible"]:
             return done(status="escalated", proposal_amount=0, error_reason=order_view["reason"])
         quote = investigated["tools"]["compute_compensation"]
-        return settle_quote(
+        return _settle_quote(
             conn, claim_id, quote, budget=budget, trace=trace,
             done=done, crash_at=crash_at,
         )
     finally:
         conn.close()
+
+
+def _settle_quote(conn, claim_id, quote, *, budget, trace, done, crash_at):
+    """Submit the full quote to the host, then report the actual ledger."""
+    from lab8.durability import InjectedCrash, issue_refund
+
+    proposal = int(quote["amount_vnd"])
+    trace.add("quote", quote)
+    if proposal <= 0:
+        return done(status="denied", proposal_amount=0, error_reason=quote.get("reason"))
+
+    budget.add_tool(tool_cost())
+    try:
+        outcome = issue_refund(conn, claim_id, proposal, crash_at=crash_at)
+    except InjectedCrash:
+        trace.add("crash", {"at": crash_at})
+        trace.write()
+        raise
+    trace.add("refund", {"ok": outcome["ok"], "reason": outcome["reason"]})
+    status = "resolved" if outcome["ok"] else "failed" if outcome["conflict"] else "denied"
+    return done(
+        status=status,
+        proposal_amount=proposal,
+        error_reason=None if outcome["ok"] else outcome["reason"],
+    )
