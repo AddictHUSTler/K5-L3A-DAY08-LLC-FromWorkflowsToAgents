@@ -1,16 +1,17 @@
 # Decision record
 
 - Shape chọn: workflow
-- Commit hash: 30e840f (base của working tree được đo)
+- Commit hash: 35eccc8 (commit của code dùng cho benchmark public)
 - Run id dẫn chứng: R-workflow-C-001-s11; src/reports/benchmark.json
 - Pass rate / pass^5 / seed min-max / variance: 1.000 / 1.000 / 1.000–1.000 / 0
 - Cost per success (mô phỏng, VND): 34.29
 - Crash safety: 20/20 (src/reports/crash.json, host/swarm); T12 kiểm crash/resume riêng cho cả ba implementation.
 - Secret leak / approval bypass: 0 vi phạm được phát hiện trong 70 trial workflow theo assertion public; test host và handoff đều pass.
+- Hidden self-check (không nhãn): 40 claim × 5 seed; workflow, single và orchestrator đều có 0 error và 0 `leak_suspect`. Kết quả này không phải hidden pass rate.
 
 ## Vì sao shape này
 
-Chọn workflow: cùng 14 claim × 5 seed, đạt độ đúng và ổn định bằng single/orchestrator với cost thấp nhất. Luồng refund có thứ tự rõ ràng; không cần thêm model hay delegation để xử lý bộ case này.
+Chọn workflow: trên cùng 14 claim × 5 seed, workflow, single và orchestrator đều đạt 70/70; workflow có cost/success thấp nhất (34.29 VND, so với 34.95 của single và 43.57 của orchestrator). Swarm đạt 69/70 và cost/success cao nhất (49.57 VND); lỗi duy nhất là tin ticket nói trễ 5 ngày trong khi order ghi 2 ngày tại T02, seed 55. Workflow có luồng xác định, không cần thêm model hay delegation cho bộ case này.
 
 | Shape | Pass | Pass^5 | Seed min–max | Variance | VND/success |
 | --- | --- | --- | --- | --- | --- |
