@@ -5,7 +5,7 @@
 - Tên nhóm: LLC
 - Thành viên: Đỗ Nhật Anh (2A202603701), Nguyễn Trọng Phương Bách (2A202603716); thông tin chi tiết ở `TEAM.md`.
 - Repo: [K5-L3A-DAY08-LLC-FromWorkflowsToAgents](https://github.com/AddictHUSTler/K5-L3A-DAY08-LLC-FromWorkflowsToAgents), nhánh `main`.
-- Commit hiện tại khi lập báo cáo: `35eccc8`; cập nhật hash sau commit hồ sơ cuối.
+- Commit hồ sơ và bằng chứng CP5: `c3b7633`; commit tiếp theo ghi hash này vào ADR/TEAM: `043ccf0`.
 
 ## 2. Mục tiêu và cách tiếp cận
 

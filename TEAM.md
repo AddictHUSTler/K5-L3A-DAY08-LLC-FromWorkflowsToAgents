@@ -5,7 +5,7 @@
 - Tên nhóm: LLC
 - Lớp: L3A
 - Repo nhóm: `K5-L3A-DAY08-LLC-FromWorkflowsToAgents` (xem [SUBMISSION.md](SUBMISSION.md))
-- URL repo, nhánh nộp, commit chốt: https://github.com/AddictHUSTler/K5-L3A-DAY08-LLC-FromWorkflowsToAgents, `main`, `c3b7633`.
+- URL repo, nhánh nộp, commit chốt hiện tại: https://github.com/AddictHUSTler/K5-L3A-DAY08-LLC-FromWorkflowsToAgents, `main`, `043ccf0`.
 
 ## Thành viên
 
@@ -25,8 +25,8 @@ Gợi ý chia vai:
 
 | Người | Vai | Commit | Test đã thêm hoặc sửa |
 | --- | --- | --- | --- |
-| Đỗ Nhật Anh | Kiểm thử policy, quyền truy cập và trace; rà soát CP2–CP4 | `6d1c7af` (cùng nhóm); thay đổi kiểm thử hiện tại sẽ nằm trong commit tiếp theo | `src/tests/test_student_edge_cases.py`; `src/tests/test_student_shape_policy.py` |
-| Nguyễn Trọng Phương Bách | Tích hợp shapes, benchmark và bonus B3 verifier | `6d1c7af`, `25524f5` | `src/tests/test_public_matrix.py`; `src/tests/test_bonus_swarm_verified.py` |
+| Đỗ Nhật Anh | Kiểm thử policy, quyền truy cập và trace; rà soát CP2–CP5 | `6d1c7af`, `daa6183`, `c3b7633` | `src/tests/test_student_edge_cases.py`; `src/tests/test_student_shape_policy.py` |
+| Nguyễn Trọng Phương Bách | Tích hợp shapes, benchmark và bonus B3 verifier | `6d1c7af`, `daa6183`, `25524f5` | `src/tests/test_public_matrix.py`; `src/tests/test_bonus_swarm_verified.py` |
 
 ## Cá nhân
 

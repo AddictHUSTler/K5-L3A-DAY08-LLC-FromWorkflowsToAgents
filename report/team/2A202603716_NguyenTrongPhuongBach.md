@@ -20,10 +20,11 @@ Cùng nhóm hoàn thiện ba shape và benchmark public; tập trung phát tri�
 
 ## 4. Bằng chứng
 
-- Commit bonus: [25524f5 — add bonus submission](https://github.com/AddictHUSTler/K5-L3A-DAY08-LLC-FromWorkflows-to-Agents/commit/25524f561ab3f569fcd41cef4aa8223c37796083).
+- Các commit kỹ thuật liên quan: [6d1c7af](https://github.com/AddictHUSTler/K5-L3A-DAY08-LLC-FromWorkflowsToAgents/commit/6d1c7af) có phần triển khai ban đầu của các shape và verifier; [daa6183](https://github.com/AddictHUSTler/K5-L3A-DAY08-LLC-FromWorkflowsToAgents/commit/daa6183) sửa các shape; [25524f5 — add bonus submission](https://github.com/AddictHUSTler/K5-L3A-DAY08-LLC-FromWorkflowsToAgents/commit/25524f561ab3f569fcd41cef4aa8223c37796083) bổ sung B3, bộ case, test và reports; [c3b7633](https://github.com/AddictHUSTler/K5-L3A-DAY08-LLC-FromWorkflowsToAgents/commit/c3b7633) lưu hồ sơ CP5 và hidden self-check.
 - Test: `python -m pytest -q tests/test_bonus_swarm_verified.py`.
 - Lệnh tái lập: `python -m bonus.evaluate --extra-shape swarm_verified=bonus.swarm_verified:run_claim`.
 - Reports sinh bằng script: `src/reports/bonus_b3_public.json` và `src/reports/bonus_b3_adversarial.json`.
+- Hidden self-check CP5: `src/reports/hidden_selfcheck.json` có 200 trial mỗi student shape; workflow, single và orchestrator đều có 0 error và 0 `leak_suspect`.
 - Run minh họa: `R-swarm_verified-C-002-s55` sửa trường hợp ticket nói trễ 5 ngày trong khi order ghi 2 ngày; `R-swarm_verified-B3-002-s55` sửa quote từ 0 lên 30.000 VND.
 - Kết quả: public, swarm 69/70 và swarm_verified 70/70; bộ tự viết, swarm 37/40 và swarm_verified 40/40. Các kết quả này thuộc các bộ đo đã chạy, không thay thế hidden grade.
 
