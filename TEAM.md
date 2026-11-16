@@ -5,7 +5,7 @@
 - Tên nhóm: LLC
 - Lớp: L3A
 - Repo nhóm: `K5-L3A-DAY08-LLC-FromWorkflowsToAgents` (xem [SUBMISSION.md](SUBMISSION.md))
-- URL repo, nhánh nộp, commit chốt: https://github.com/AddictHUSTler/K5-L3A-DAY08-LLC-FromWorkflowsToAgents, `main`, `35eccc8` (cập nhật nếu có commit chốt mới).
+- URL repo, nhánh nộp, commit chốt: https://github.com/AddictHUSTler/K5-L3A-DAY08-LLC-FromWorkflowsToAgents, `main`, `c3b7633`.
 
 ## Thành viên
 

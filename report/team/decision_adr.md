@@ -1,7 +1,7 @@
 # Decision record
 
 - Shape chọn: workflow
-- Commit hash: 35eccc8 (commit của code dùng cho benchmark public)
+- Commit hash: c3b7633 (commit hồ sơ CP5, test và report dùng cho bài nộp)
 - Run id dẫn chứng: R-workflow-C-001-s11; src/reports/benchmark.json
 - Pass rate / pass^5 / seed min-max / variance: 1.000 / 1.000 / 1.000–1.000 / 0
 - Cost per success (mô phỏng, VND): 34.29
