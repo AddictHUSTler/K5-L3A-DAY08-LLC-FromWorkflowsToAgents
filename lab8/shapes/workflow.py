@@ -29,8 +29,13 @@ ones. `lab8.trace.Trace` does this; your own tracer is fine if it matches.
 
 from __future__ import annotations
 
-from lab8.schemas import RunResult
-from lab8.shapes.common import not_implemented
+from functools import partial
+
+from lab8.db import connect
+from lab8.schemas import Budget, RunResult, make_run_id
+from lab8.shapes.common import finish, settle_quote
+from lab8.tools import compute_compensation, get_claim_view, lookup_order, tool_cost
+from lab8.trace import Trace
 
 
 def run_claim(
@@ -40,5 +45,31 @@ def run_claim(
     store_path: str,
     crash_at: str | None = None,
 ) -> RunResult:
-    del store_path, crash_at
-    return not_implemented("workflow", claim_id, seed)
+    conn = connect(store_path)
+    try:
+        budget = Budget()
+        trace = Trace(make_run_id("workflow", claim_id, seed))
+        done = partial(
+            finish, conn, shape="workflow", claim_id=claim_id, seed=seed,
+            budget=budget, trace=trace,
+        )
+        budget.add_tool(tool_cost())
+        claim = get_claim_view(conn, claim_id)
+        trace.add("claim", {"found": claim["found"], "has_order": bool(claim.get("order_id"))})
+        if not claim["found"]:
+            return done(status="failed", proposal_amount=0, error_reason="unknown_claim")
+        if not claim.get("order_id"):
+            return done(status="needs_info", proposal_amount=0, error_reason="missing_order_id")
+        budget.add_tool(tool_cost())
+        order_view = lookup_order(conn, claim["order_id"], claim["principal_id"])
+        trace.add("order", {"visible": order_view["visible"], "reason": order_view["reason"]})
+        if not order_view["visible"]:
+            return done(status="escalated", proposal_amount=0, error_reason=order_view["reason"])
+        budget.add_tool(tool_cost())
+        quote = compute_compensation(conn, order_view["order"])
+        return settle_quote(
+            conn, claim_id, quote, budget=budget, trace=trace,
+            done=done, crash_at=crash_at,
+        )
+    finally:
+        conn.close()

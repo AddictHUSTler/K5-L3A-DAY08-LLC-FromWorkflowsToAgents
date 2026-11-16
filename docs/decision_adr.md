@@ -1,30 +1,36 @@
 # Decision record
 
-Điền sau dấu `:` trên cùng dòng, không xóa nhãn. Giảng viên và `python -m lab8.check_submission` đọc các dòng này bằng máy.
-`Shape chọn` phải là đúng một trong: `workflow`, `single`, `orchestrator`, `swarm`. Đây là shape được chấm cổng hidden.
-
-- Shape chọn:
-- Commit hash:
-- Run id dẫn chứng:
-- Pass rate / pass^5 / seed min-max / variance:
-- Cost per success (mô phỏng, VND):
-- Crash safety:
-- Secret leak / approval bypass:
-
-Ví dụ một dòng đã điền: `- Shape chọn: workflow`, `- Crash safety: 20/20 (reports/crash.json)`.
+- Shape chọn: workflow
+- Commit hash: 30e840f (base của working tree được đo)
+- Run id dẫn chứng: R-workflow-C-001-s11; reports/benchmark.json
+- Pass rate / pass^5 / seed min-max / variance: 1.000 / 1.000 / 1.000–1.000 / 0
+- Cost per success (mô phỏng, VND): 34.29
+- Crash safety: 20/20 (reports/crash.json, host/swarm); T12 kiểm crash/resume riêng cho cả ba implementation.
+- Secret leak / approval bypass: 0 vi phạm được phát hiện trong 70 trial workflow theo assertion public; test host và handoff đều pass.
 
 ## Vì sao shape này
 
-Viết 1 đoạn. So cùng corpus và cùng seed, không so với một lần chạy lẻ.
+Chọn workflow: cùng 14 claim × 5 seed, đạt độ đúng và ổn định bằng single/orchestrator với cost thấp nhất. Luồng refund có thứ tự rõ ràng; không cần thêm model hay delegation để xử lý bộ case này.
+
+| Shape | Pass | Pass^5 | Seed min–max | Variance | VND/success |
+| --- | --- | --- | --- | --- | --- |
+| workflow | 70/70 | 1.000 | 1.000–1.000 | 0 | 34.29 |
+| single | 70/70 | 1.000 | 1.000–1.000 | 0 | 34.95 |
+| orchestrator | 70/70 | 1.000 | 1.000–1.000 | 0 | 43.57 |
+| swarm | 69/70 | 0.929 | 0.929–1.000 | 0.000816 | 49.57 |
+
+Nguồn: `reports/benchmark.json`. Cost/success tính cả trial fail. Swarm sai tại `R-swarm-C-002-s55`: tin ticket ghi trễ 5 ngày trong khi order ghi 2 ngày.
 
 ## Có đáng đổi lấy multi-agent không
 
-Nếu pass nhỉnh hơn mà cost và variance cao hơn, nhóm giữ hay đổi? Điều kiện nào làm quyết định đảo lại?
+Chưa có lợi ích về correctness trong kết quả này. Orchestrator đắt hơn workflow khoảng 27%; swarm khoảng 45%. Chỉ đổi khi có bước điều tra độc lập hoặc yêu cầu mới mà workflow xử lý kém, và phép đo cùng điều kiện cho thấy lợi ích đủ bù cost, vẫn giữ các cổng approval, leak và crash.
 
 ## Trace và bằng chứng
 
-Trace của nhóm ghi những event nào? Field nào cố ý **không** ghi, và vì sao? Nếu trace nằm ngoài chỗ scanner quét được, đội security chứng minh thế nào là hệ thống không lộ secret?
+Workflow ghi `claim` (found/has_order), `order` (visible/reason), `quote`, `refund` (ok/reason) và `crash` khi được inject. Không ghi raw claim/order, ticket, secret, header, phone, địa chỉ, tên hàng hay internal note.
+
+Trace ở `traces/<run_id>.json`, có run_id khớp và danh sách events. Evaluator quét trace, file cùng prefix và kết quả; implementation không ghi debug ra vị trí khác. Ledger/audit cùng assertion public quyết định pass.
 
 ## Giới hạn
 
-MockLLM không phải model sản xuất. Latency để `unavailable`. Không sửa JSON cho đủ 0.75.
+Kết luận áp dụng cho 14 claim public và 5 seed với MockLLM. Single hiện chọn tool bằng code; chênh lệch giữa bốn shape không tách riêng ảnh hưởng topology khỏi prompt/tool calls. Giá là mô phỏng; latency: `unavailable`.

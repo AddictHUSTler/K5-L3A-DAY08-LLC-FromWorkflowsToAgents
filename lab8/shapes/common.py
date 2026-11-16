@@ -9,6 +9,7 @@ from typing import Any
 from lab8.durability import committed_audit_count, get_refund
 from lab8.schemas import Budget, RunResult, make_run_id
 from lab8.trace import Trace
+from lab8.tools import tool_cost
 
 
 def not_implemented(shape: str, claim_id: str, seed: int) -> RunResult:
@@ -72,3 +73,28 @@ def finish(
 def safe_dump(payload: dict[str, Any]) -> dict[str, Any]:
     """Copy a payload for the trace. Caller must already have dropped secrets."""
     return json.loads(json.dumps(payload, ensure_ascii=False))
+
+
+def settle_quote(conn, claim_id, quote, *, budget, trace, done, crash_at):
+    """Submit the full quote to the host, then report the actual ledger."""
+    from lab8.durability import InjectedCrash, issue_refund
+
+    proposal = int(quote["amount_vnd"])
+    trace.add("quote", quote)
+    if proposal <= 0:
+        return done(status="denied", proposal_amount=0, error_reason=quote.get("reason"))
+
+    budget.add_tool(tool_cost())
+    try:
+        outcome = issue_refund(conn, claim_id, proposal, crash_at=crash_at)
+    except InjectedCrash:
+        trace.add("crash", {"at": crash_at})
+        trace.write()
+        raise
+    trace.add("refund", {"ok": outcome["ok"], "reason": outcome["reason"]})
+    status = "resolved" if outcome["ok"] else "failed" if outcome["conflict"] else "denied"
+    return done(
+        status=status,
+        proposal_amount=proposal,
+        error_reason=None if outcome["ok"] else outcome["reason"],
+    )
