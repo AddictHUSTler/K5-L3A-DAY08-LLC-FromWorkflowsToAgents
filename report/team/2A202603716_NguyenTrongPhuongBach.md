@@ -9,7 +9,7 @@ Ví dụ: `20241234_NguyenVanAn.md`.
 - Họ tên: Nguyễn Trọng Phương Bách
 - MSSV: 2A202603716
 - Email: 26ai.bachntp@vinuni.edu.vn
-- GitHub: 
+- GitHub: https://github.com/AddictHUSTler
 
 ## 2. Phần việc phụ trách
 
@@ -29,7 +29,7 @@ Phần B3: verifier trước settlement của swarm, bộ case đối kháng, te
 - Report sinh bằng script: `src/reports/bonus_b3_public.json`, `src/reports/bonus_b3_adversarial.json`; phân tích trong `report/team/bonus_report.md`.
 - Run id: `R-swarm_verified-C-002-s55` (ticket 5 ngày, order 2 ngày, sửa quote về 0); `R-swarm_verified-B3-002-s55` (ticket nói thiếu, sửa quote từ 0 lên 30.000).
 - Public: swarm 69/70 → verified 70/70; tự viết: 37/40 → 40/40. Bảy override tổng cộng; safety counts quan sát đều 0. Đây không phải kết quả hidden.
-- Link commit: 
+- Link commit: [Commit 25524f5](https://github.com/AddictHUSTler/K5-L3A-DAY08-LLC-From-Workflows-to-Agents/commit/25524f561ab3f569fcd41cef4aa8223c37796083)
 ## 5. Công cụ AI đã dùng
 
 - Công cụ AI: Codex; hỗ trợ đọc rubric/rules/submission, viết code verifier, test, case và báo cáo. Runtime lab chỉ dùng MockLLM, không gọi API model thật.
